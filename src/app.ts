@@ -3,6 +3,7 @@ import { userRouter } from './users/users.js';
 import { Server } from 'http';
 import { LoggerService } from './logger/logger.services';
 import { UserController } from './users/users.controller';
+import { ExeptionFilter } from './errors/exeption.filter';
 
 class App {
     app: Express;
@@ -10,18 +11,26 @@ class App {
     server: Server;
     logger: LoggerService;
     userController: UserController;
+    exeptionFilter: ExeptionFilter;
 
-    constructor(logger: LoggerService, userController: UserController){
+    constructor(logger: LoggerService, 
+                userController: UserController, 
+                exeptionFilter: ExeptionFilter){
         this.app = express();
         this.port = 8000;
         this.logger = logger;
         this.userController = userController;
+        this.exeptionFilter = exeptionFilter;
     }
 
     useRoutes(){
         this.app.use('/users', this.userController.router);
     }
-    
+
+    useExeptionFilters(){
+        this.app.use(this.exeptionFilter.catch.bind(this.exeptionFilter));
+    }
+
     async init(){
         this.useRoutes();
         this.server = this.app.listen(this.port);
