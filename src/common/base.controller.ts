@@ -1,11 +1,13 @@
 import { LoggerService } from "../logger/logger.services";
-import express, { Router, Response } from 'express';
+import { Router, Response } from 'express';
 import {IControllerRoute} from './route.interface';
 
 abstract class BaseController {
     private readonly _router: Router;
-    constructor(private logger: LoggerService){
+    private logger: LoggerService;
+    constructor( logger: LoggerService ){
        this._router = Router();
+       this.logger = logger;
     }
     get router(){
         return this._router;
